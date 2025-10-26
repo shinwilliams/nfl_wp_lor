@@ -5,7 +5,6 @@ import pandas as pd
 # Load data
 seasons = [s for s in range(1999, 2026)]
 data = nfl.load_pbp(seasons).to_pandas()
-cols = data.columns
 
 # Remove rows with bad data and where WP == 0 or 1
 clean_data = data.loc[
@@ -32,8 +31,10 @@ print('-'*100)
 for s in seasons:
     pass_data = clean_data.loc[(data['season'] == s) & (clean_data['play_type'] == 'pass'), ['wpa', 'wp_lor']]
     rush_data = clean_data.loc[(data['season'] == s) & (clean_data['play_type'] == 'run'), ['wpa', 'wp_lor']]
-    pass_wpa = pass_data['wpa'].mean()
-    rush_wpa = rush_data['wpa'].mean()
-    pass_lor = pass_data['wp_lor'].mean()
-    rush_lor = rush_data['wp_lor'].mean()
-    print(f'{s}\t{len(pass_data)}\t{len(rush_data)}\t{pass_wpa}\t{rush_wpa}\t{pass_lor}\t{rush_lor}\t{pass_wpa-rush_wpa}\t{pass_lor-rush_lor}')
+    pass_wpa = np.round(pass_data['wpa'].mean(), 6)
+    rush_wpa = np.round(rush_data['wpa'].mean(), 6)
+    pass_lor = np.round(pass_data['wp_lor'].mean(), 6)
+    rush_lor = np.round(rush_data['wp_lor'].mean(), 6)
+    wpa_diff = np.round(pass_wpa - rush_wpa, 6)
+    lor_diff = np.round(pass_lor - rush_lor, 6)
+    print(f'{s}\t{len(pass_data)}\t{len(rush_data)}\t{pass_wpa}\t{rush_wpa}\t{pass_lor}\t{rush_lor}\t{wpa_diff}\t{lor_diff}')
